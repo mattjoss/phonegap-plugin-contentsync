@@ -493,9 +493,15 @@
     if(copyRootApp == YES) {
         NSLog(@"Copying Root App");
         // we use cordova.js as a way to find the root www/
-        NSString* root = [[[self commandDelegate] pathForResource:@"cordova.js"] stringByDeletingLastPathComponent];
-
-        NSURL* sourceURL = [NSURL fileURLWithPath:root];
+        // NSString* root = [[[self commandDelegate] pathForResource:@"cordova.js"] stringByDeletingLastPathComponent];
+        //
+        // NSURL* sourceURL = [NSURL fileURLWithPath:root];
+		
+        // Hack for handling www folder in location separate from cordova.js
+        NSString* root = [[[[NSBundle mainBundle] bundleURL] URLByAppendingPathComponent:@"www" isDirectory:NO] absoluteString];
+		NSURL* sourceURL = [NSURL URLWithString:root];
+        
+        
         [fileManager removeItemAtURL:destinationURL error:NULL];
         BOOL success = [fileManager copyItemAtURL:sourceURL toURL:destinationURL error:&errorCopy];
 
